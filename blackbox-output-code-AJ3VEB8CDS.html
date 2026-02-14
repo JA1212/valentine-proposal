@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2; /* Light pink background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            animation: pulse 2s infinite; /* Subtle background pulse */
+        }
+
+        @keyframes pulse {
+            0% { background-color: #ffe6f2; }
+            50% { background-color: #ffccdd; }
+            100% { background-color: #ffe6f2; }
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            position: relative;
+            overflow: hidden; /* For floating hearts */
+        }
+
+        h1 {
+            color: #d63384; /* Dark pink */
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Smooth transitions */
+        }
+
+        #yes {
+            background-color: #28a745; /* Green for Yes */
+            color: white;
+            box-shadow: 0 0 0 rgba(40, 167, 69, 0.7); /* For glow effect */
+        }
+
+        #yes:hover {
+            background-color: #218838;
+            transform: scale(1.1); /* Scale up on hover */
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.7); /* Green glow */
+        }
+
+        #no {
+            background-color: #dc3545; /* Red for No */
+            color: white;
+            position: relative; /* Allows movement */
+        }
+
+        #no:hover {
+            background-color: #c82333;
+            animation: shake 0.5s; /* Shake effect on hover */
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .bounce {
+            animation: bounce 0.5s; /* Bounce when repositioning */
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .story-message {
+            display: none; /* Hidden initially */
+            font-size: 1.5em;
+            color: #d63384;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards; /* Fade in when shown */
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff69b4; /* Pink hearts */
+            font-size: 2em;
+            animation: float 3s linear infinite;
+            pointer-events: none; /* Don't interfere with clicks */
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Will you be my Valentine??</h1>
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+        <p class="story-message" id="story">And now here's our story will begin.</p>  <!-- New message element -->
+    </div>
+
+    <script>
+        const noButton = document.getElementById('no');
+        const yesButton = document.getElementById('yes');
+        const storyMessage = document.getElementById('story');
+        const container = document.querySelector('.container');
+
+        // Function to move the No button randomly on hover and add bounce
+        noButton.addEventListener('mouseover', () => {
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = noButton.getBoundingClientRect();
+
+            // Calculate random position within the container
+            const maxX = containerRect.width - buttonRect.width;
+            const maxY = containerRect.height - buttonRect.height;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            noButton.style.position = 'absolute';
+            noButton.style.left = randomX + 'px';
+            noButton.style.top = randomY + 'px';
+
+            // Add bounce class for animation
+            noButton.classList.add('bounce');
+            setTimeout(() => noButton.classList.remove('bounce'), 500); // Remove after animation
+        });
+
+        // Function to handle Yes button click: Hide buttons, show story, and start heart rain
+        yesButton.addEventListener('click', () => {
+            // Fade out buttons
+            yesButton.style.opacity = '0';
+            noButton.style.opacity = '0';
+            setTimeout(() => {
+                yesButton.style.display = 'none';
+                noButton.style.display = 'none';
+                // Show and fade in the story message
+                storyMessage.style.display = 'block';
+            }, 300);
+
+            // Start floating hearts animation
+            startHeartRain();
+        });
+
+        // Function to create floating hearts
+        function startHeartRain() {
+            for (let i = 0; i < 20; i++) {  // Create 20 hearts
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.textContent = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';  // Random horizontal position
+                    container.appendChild(heart);
+
+                    // Remove heart after animation
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 200);  // Stagger creation
+            }
+        }
+    </script>
+</body>
+</html>
